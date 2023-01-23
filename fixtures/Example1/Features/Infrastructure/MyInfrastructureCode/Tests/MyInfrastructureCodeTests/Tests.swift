@@ -12,8 +12,11 @@ import Nimble
 import Quick
 
 func awaitTest() async -> Int {
-    return 1
+    1
 }
+
+// MARK: - TableOfContentsSpec
+
 class TableOfContentsSpec: QuickSpec {
     override func spec() {
         it("can call async func") {

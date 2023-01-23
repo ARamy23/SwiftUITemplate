@@ -7,8 +7,6 @@ let dependencies = Dependencies(
     swiftPackageManager: .init(
         modules.allSwiftPacakges,
 
-        targetSettings: modules.allTargetSettings
-    ),
+        targetSettings: modules.allTargetSettings),
 
-    platforms: [platform]
-)
+    platforms: [platform])

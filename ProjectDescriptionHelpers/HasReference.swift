@@ -7,16 +7,20 @@
 
 import ProjectDescription
 
+// MARK: - HasReference
+
 protocol HasReference {
     var reference: TargetDependency { get }
 }
 
+// MARK: - Module + HasReference
+
 extension Module: HasReference {
     var reference: TargetDependency {
         switch self {
-        case let .uFeature(microFeature):
+        case .uFeature(let microFeature):
             return microFeature.reference
-        case let .package(swiftPackage):
+        case .package(let swiftPackage):
             return swiftPackage.reference
         }
     }

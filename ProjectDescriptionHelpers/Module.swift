@@ -16,6 +16,8 @@ extension Modules {
     }
 }
 
+// MARK: - Module
+
 /// Enum that defines the possible types of Frameworks
 /// https://betterprogramming.pub/customize-your-xcodeproject-with-tuist-6fc41fb59262
 public enum Module: Hashable {
@@ -24,14 +26,14 @@ public enum Module: Hashable {
     case package(SwiftPackage)
 
     public var package: SwiftPackage? {
-        if case let .package(info) = self {
+        if case .package(let info) = self {
             return info
         }
         return nil
     }
 
     public var uFeature: MicroFeature? {
-        if case let .uFeature(info) = self {
+        if case .uFeature(let info) = self {
             return info
         }
         return nil

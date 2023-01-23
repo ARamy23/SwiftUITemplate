@@ -1,5 +1,7 @@
 import ProjectDescription
 
+// MARK: - Array + HasAllPackageDescendentDependency
+
 /// Project helpers are functions that simplify the way you define your project.
 /// Share code to create targets, settings, dependencies,
 /// Create your own conventions, e.g: a func that makes sure all shared targets are "static frameworks"
@@ -28,6 +30,8 @@ extension Array: HasAllPackageDescendentDependency where Element == Module {
     }
 }
 
+// MARK: - Array + HasAllProjectTargets
+
 extension Array: HasAllProjectTargets where Element == Module {
     public var allProjectTargets: [Target] {
         let targets = reduce(into: []) { partialResult, module in
@@ -41,6 +45,8 @@ extension Array: HasAllProjectTargets where Element == Module {
     }
 }
 
+// MARK: - HasAllPackageDescendentDependency
+
 private protocol HasAllPackageDescendentDependency {
     /// the swift packages for all targets
     /// used by the final merged project only
@@ -48,6 +54,8 @@ private protocol HasAllPackageDescendentDependency {
         get
     }
 }
+
+// MARK: - MicroFeature + HasAllPackageDescendentDependency
 
 extension MicroFeature: HasAllPackageDescendentDependency {
     var allPackageDescendentDependencies: SwiftPackages {
@@ -64,12 +72,14 @@ extension MicroFeature: HasAllPackageDescendentDependency {
     }
 }
 
+// MARK: - Module + HasAllPackageDescendentDependency
+
 extension Module: HasAllPackageDescendentDependency {
     var allPackageDescendentDependencies: SwiftPackages {
         switch self {
-        case let .uFeature(microFeature):
+        case .uFeature(let microFeature):
             return microFeature.allPackageDescendentDependencies
-        case let .package(swiftPackage):
+        case .package(let swiftPackage):
             return [swiftPackage]
         }
     }

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - RequiredTargetType
+
 public enum RequiredTargetType: Hashable {
     case framework
     case unitTests
@@ -36,6 +38,8 @@ typealias TargetTypes = Set<RequiredTargetType>
 extension TargetTypes {
     static var all: Self = .init([.framework, .unitTests, .exampleApp, .uiTests])
 }
+
+// MARK: - RequiredTargetTypes
 
 /// manage target configs
 struct RequiredTargetTypes: Hashable {
@@ -72,6 +76,8 @@ struct RequiredTargetTypes: Hashable {
     // static var objcTargets: Self = .init(types: .objcTargets, hasResources: .empty, hasHeader: true)
 }
 
+// MARK: HasModuleDependencies
+
 extension RequiredTargetTypes: HasModuleDependencies {
     /// return modules which is required by specified types
     func moduleDependencies(types: TargetTypes) -> Modules {
@@ -81,6 +87,8 @@ extension RequiredTargetTypes: HasModuleDependencies {
         return .init(values)
     }
 }
+
+// MARK: PackageDependencyProviding
 
 extension RequiredTargetTypes: PackageDependencyProviding {
     func packageDependencies(types: TargetTypes) -> SwiftPackages {

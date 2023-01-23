@@ -7,9 +7,13 @@
 
 import Foundation
 
+// MARK: - PackageDescendentDependencyProviding
+
 protocol PackageDescendentDependencyProviding: PackageDependencyProviding {
     func packageDescendentDependencies(types: TargetTypes) -> SwiftPackages
 }
+
+// MARK: - MicroFeature + PackageDescendentDependencyProviding
 
 extension MicroFeature: PackageDescendentDependencyProviding {
     func packageDescendentDependencies(types: TargetTypes) -> SwiftPackages {
@@ -27,12 +31,14 @@ extension MicroFeature: PackageDescendentDependencyProviding {
     }
 }
 
+// MARK: - Module + PackageDescendentDependencyProviding
+
 extension Module: PackageDescendentDependencyProviding {
     func packageDescendentDependencies(types: TargetTypes) -> SwiftPackages {
         switch self {
-        case let .uFeature(microFeature):
+        case .uFeature(let microFeature):
             return microFeature.packageDescendentDependencies(types: types)
-        case let .package(swiftPackage):
+        case .package(let swiftPackage):
             return [swiftPackage]
         }
     }

@@ -32,14 +32,15 @@ private extension Module {
 
     /// hierarchical feature directory
     static var MyInfrastructureCode: Module {
-        .uFeature(name: "MyInfrastructureCode",
-                  group: MicroFeatureGroup.infrastructure.rawValue,
-                  targets: [
-                      .exampleApp: .resourcesOnly,
-                      .unitTests: .default,
-                      .framework: .hasDependencies([
-                      ]),
-                  ])
+        .uFeature(
+            name: "MyInfrastructureCode",
+            group: MicroFeatureGroup.infrastructure.rawValue,
+            targets: [
+                .exampleApp: .resourcesOnly,
+                .unitTests: .default,
+                .framework: .hasDependencies([
+                ]),
+            ])
     }
 
     static var Alamofire: Module {
@@ -54,6 +55,8 @@ public let modules: [Module] = [
 ]
 
 public let platform: Platform = .iOS
+
+// MARK: - MicroFeatureGroup
 
 enum MicroFeatureGroup: String {
     case infrastructure = "Infrastructure"

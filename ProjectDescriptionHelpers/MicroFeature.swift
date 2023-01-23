@@ -7,6 +7,8 @@
 
 import ProjectDescription
 
+// MARK: - MicroFeature
+
 /// micro framework
 public struct MicroFeature: HasReference, Hashable {
     internal init(name: String, group: MicroFeatureGroup, requiredTargetTypes: RequiredTargetTypes) {
@@ -15,10 +17,10 @@ public struct MicroFeature: HasReference, Hashable {
         self.requiredTargetTypes = requiredTargetTypes
     }
 
-    internal init(name: String,
-                  group: MicroFeatureGroup,
-                  additionalDependencies: Modules = [])
-    {
+    internal init(
+        name: String,
+        group: MicroFeatureGroup,
+        additionalDependencies: Modules = []) {
         self.init(name: name, group: group, requiredTargetTypes: .init(configs: [
             .framework: .init(hasResources: false, modules: additionalDependencies),
             // .unitTests: .init(hasResources: false, modules: []), // disable unit test target by default
@@ -67,6 +69,8 @@ extension MicroFeature {
     }
 }
 
+// MARK: HasModuleDependencies
+
 extension MicroFeature: HasModuleDependencies {
     func moduleDependencies(types: TargetTypes) -> Modules {
         requiredTargetTypes.moduleDependencies(types: types)
@@ -83,38 +87,40 @@ extension MicroFeature {
     }
 
     var targets: [Target] {
-        return makeFeatureTargets(projectPath: projectPath) + makeFeatureExampleTargets(projectPath: projectPath)
+        makeFeatureTargets(projectPath: projectPath) + makeFeatureExampleTargets(projectPath: projectPath)
     }
 
     /// Helper function to create a framework target and an associated unit test target
     private func makeFeatureTargets(projectPath: String) -> [Target] {
         let product: Product = GenerationConfig.default.linkType == .staticLink ? .staticFramework : .framework
 
-        let resourceName: ResourceFileElements = requiredTargetTypes.hasResources(.framework) ?
-            ["\(projectPath)/Sources/Assets/**"]
+        let resourceName: ResourceFileElements = requiredTargetTypes.hasResources(.framework)
+            ? ["\(projectPath)/Sources/Assets/**"]
             :
             []
 
-        let header: Headers? = requiredTargetTypes.hasHeader(.framework) ? .headers(
-            public: "\(projectPath)/Sources/PublicHeader/**",
-            private: "\(projectPath)/Sources/PrivateHeader/**",
-            project: nil
-        ) : nil
-        let sources = Target(name: name,
-                             platform: platform,
-                             product: product,
-                             bundleId: "io.tuist.\(name)".validBundleId,
-                             deploymentTarget: deploymentTarget,
-                             infoPlist: .default,
-                             sources: ["\(projectPath)/Sources/**"],
-                             resources: resourceName, // resources provided by feature, e.g. ManResouces
-                             headers: header,
-                             dependencies: dependentReferences(types: [.framework]))
+        let header: Headers? = requiredTargetTypes.hasHeader(.framework)
+            ? .headers(
+                public: "\(projectPath)/Sources/PublicHeader/**",
+                private: "\(projectPath)/Sources/PrivateHeader/**",
+                project: nil)
+            : nil
+        let sources = Target(
+            name: name,
+            platform: platform,
+            product: product,
+            bundleId: "io.tuist.\(name)".validBundleId,
+            deploymentTarget: deploymentTarget,
+            infoPlist: .default,
+            sources: ["\(projectPath)/Sources/**"],
+            resources: resourceName, // resources provided by feature, e.g. ManResouces
+            headers: header,
+            dependencies: dependentReferences(types: [.framework]))
 
         if !requiredTargetTypes.contains(.unitTests) { return [sources] }
 
-        let testResourceName: ResourceFileElements = requiredTargetTypes.hasResources(.unitTests) ?
-            ["\(projectPath)/Tests/Assets/**"]
+        let testResourceName: ResourceFileElements = requiredTargetTypes.hasResources(.unitTests)
+            ? ["\(projectPath)/Tests/Assets/**"]
             :
             []
 
@@ -123,15 +129,16 @@ extension MicroFeature {
             .external(name: "Nimble"),
             .external(name: "Quick"),
         ] + dependentReferences(types: [.unitTests])
-        let tests = Target(name: "\(name)Tests",
-                           platform: platform,
-                           product: .unitTests,
-                           bundleId: "io.tuist.\(name)Tests".validBundleId,
-                           deploymentTarget: deploymentTarget,
-                           infoPlist: .default,
-                           sources: ["\(projectPath)/Tests/**"],
-                           resources: testResourceName, // resources for testing
-                           dependencies: testDependencies)
+        let tests = Target(
+            name: "\(name)Tests",
+            platform: platform,
+            product: .unitTests,
+            bundleId: "io.tuist.\(name)Tests".validBundleId,
+            deploymentTarget: deploymentTarget,
+            infoPlist: .default,
+            sources: ["\(projectPath)/Tests/**"],
+            resources: testResourceName, // resources for testing
+            dependencies: testDependencies)
         return [sources, tests]
     }
 
@@ -144,8 +151,8 @@ extension MicroFeature {
             "CFBundleShortVersionString": "1.0",
             "CFBundleVersion": "1",
             "UIApplicationSceneManifest": ["UIApplicationSupportsMultipleScenes": true],
-            // "UIMainStoryboardFile": "",
-            // "UILaunchStoryboardName": "LaunchScreen"
+            "UIMainStoryboardFile": "",
+            "UILaunchStoryboardName": "LaunchScreen"
         ]
 
         let mainTarget = Target(
@@ -157,23 +164,27 @@ extension MicroFeature {
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["\(projectPath)/Example/Shared/**"],
             resources: ["\(projectPath)/Example/Shared/*.xcassets"],
-            dependencies: dependentReferences(types: [.exampleApp]) + [.target(name: name)] // need to reference the framework target
+            dependencies: dependentReferences(types: [.exampleApp]) +
+                [.target(name: name)] // need to reference the framework target
         )
 
         if !requiredTargetTypes.contains(.uiTests) { return [mainTarget] }
 
-        let uiTests = Target(name: "\(exampleName)Tests\(platform)",
-                             platform: platform,
-                             product: .uiTests,
-                             bundleId: "io.tuist.\(name)UITests\(platform)".validBundleId,
-                             deploymentTarget: deploymentTarget,
-                             infoPlist: .default,
-                             sources: ["\(projectPath)/Example/Tests \(platform)/**"],
-                             resources: [], // resources for testing
-                             dependencies: [.target(name: exampleName),
-                                            .external(name: "Nimble"),
-                                            .external(name: "Quick")]
-                                 + dependentReferences(types: [.uiTests]))
+        let uiTests = Target(
+            name: "\(exampleName)Tests\(platform)",
+            platform: platform,
+            product: .uiTests,
+            bundleId: "io.tuist.\(name)UITests\(platform)".validBundleId,
+            deploymentTarget: deploymentTarget,
+            infoPlist: .default,
+            sources: ["\(projectPath)/Example/Tests \(platform)/**"],
+            resources: [], // resources for testing
+            dependencies: [
+                .target(name: exampleName),
+                .external(name: "Nimble"),
+                .external(name: "Quick")
+            ]
+                + dependentReferences(types: [.uiTests]))
 
         return [mainTarget, uiTests]
     }

@@ -41,35 +41,28 @@ let template = Template(
         yearAttribute,
     ],
     items: [
-        /*
-         .string(
-             path: "Project.swift",
-             contents: "My template contents of name \(nameAttribute)"
-         ),*/
+        // .string(
+        //    path: "Project.swift",
+        //    contents: "My template contents of name \(nameAttribute)"
+        // ),
 
         .file(
             path: "\(rootPath)/\(nameAttribute)/Example/Shared/ContentView.swift",
-            templatePath: "Example/Shared/ContentView.stencil"
-        ),
+            templatePath: "Example/Shared/ContentView.stencil"),
         .file(
             path: "\(rootPath)/\(nameAttribute)/Example/Shared/\(nameAttribute)App.swift",
-            templatePath: "Example/Shared/uFeatureNameApp.stencil"
-        ),
+            templatePath: "Example/Shared/uFeatureNameApp.stencil"),
         .directory(
             path: "\(rootPath)/\(nameAttribute)/Sources/\(nameAttribute)",
-            sourcePath: "Sources/uFeatureName/ReplaceMe.swift/"
-        ),
+            sourcePath: "Sources/uFeatureName/ReplaceMe.swift/"),
         .directory(
             path: "\(rootPath)/\(nameAttribute)/Example/Shared/Assets.xcassets",
-            sourcePath: "Example/Shared/Assets.xcassets"
-        ),
+            sourcePath: "Example/Shared/Assets.xcassets"),
 
         .file(
             path: "\(rootPath)/\(nameAttribute)/Tests/\(nameAttribute)Tests/Tests.swift",
-            templatePath: "Tests/uFeatureNameTests/Tests.stencil"
-        ),
-    ]
-)
+            templatePath: "Tests/uFeatureNameTests/Tests.stencil"),
+    ])
 
 func executeCommand(command: String, args: [String]) -> String {
     let task = Process()

@@ -7,20 +7,26 @@
 
 import ProjectDescription
 
+// MARK: - HasAllProjectTargets
+
 protocol HasAllProjectTargets {
     var allProjectTargets: [Target] { get }
 }
 
+// MARK: - Module + HasAllProjectTargets
+
 extension Module: HasAllProjectTargets {
-    var allProjectTargets: [Target] {
+    public var allProjectTargets: [Target] {
         switch self {
-        case let .uFeature(microFeature):
+        case .uFeature(let microFeature):
             return microFeature.allProjectTargets
         case .package:
             return [] // swift package doesn't have targets
         }
     }
 }
+
+// MARK: - MicroFeature + HasAllProjectTargets
 
 extension MicroFeature: HasAllProjectTargets {
     var allProjectTargets: [Target] {

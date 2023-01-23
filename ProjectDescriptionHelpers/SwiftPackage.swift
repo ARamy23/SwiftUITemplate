@@ -10,6 +10,9 @@ import ProjectDescription
 
 public typealias TargetSetting = [String: SettingsDictionary]
 public typealias SwiftPackages = Set<SwiftPackage>
+
+// MARK: - SwiftPackage
+
 /// swift package
 public struct SwiftPackage: HasSwiftPackage, HasReference, Hashable {
     public init(name: String, url: String, requirement: Package.Requirement, unitTestTool: Bool = false) {

@@ -7,9 +7,11 @@
 
 import Foundation
 
+// MARK: - TargetConfig
+
 public struct TargetConfig: Hashable {
     let hasResources: Bool
-    let hasHeader: Bool = false
+    let hasHeader = false
     let modules: Modules
 }
 
